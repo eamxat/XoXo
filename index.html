@@ -38,7 +38,7 @@
         ========================================================================
     -->
     
-    <title>Eam96 | Chrome Edition</title>
+    <title>NEXUS | Chrome Edition</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -785,21 +785,20 @@
                 <div class="video-overlay-controls" onclick="event.stopPropagation()">
                      <div style="display:flex; gap:15px; align-items:center;">
                          <!-- Play -->
-                         <svg class="control-btn w-5 h-5 text-white" onclick="document.querySelector('video').play()" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                         <svg class="control-btn w-5 h-5 text-white" onclick="toggleVideoPlay()" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                          <!-- Stop -->
-                         <svg class="control-btn w-4 h-4" onclick="let v=document.querySelector('video'); v.pause(); v.currentTime=0;" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                         <svg class="control-btn w-4 h-4" onclick="stopVideo()" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
                          <!-- Replay -->
-                         <svg class="control-btn w-4 h-4" onclick="let v=document.querySelector('video'); v.currentTime=0; v.play();" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                         <svg class="control-btn w-4 h-4" onclick="replayVideo()" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
                      </div>
                      
                      <div class="volume-container">
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" class="text-gray-400"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="document.querySelector('video').volume=this.value" class="volume-slider hover-trigger" style="width: 60px;">
+                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="setVideoVolume(this.value)" class="volume-slider hover-trigger" style="width: 60px;">
                      </div>
                 </div>
                 <!-- [EDITAR VIDEO] video-main.mp4 -->
-                <!-- Removed 'controls' attribute, relying on custom overlay -->
-                <video loop muted autoplay playsinline>
+                <video loop playsinline>
                     <source src="video-main.mp4" type="video/mp4">
                     Tu navegador no soporta video.
                 </video>
@@ -832,7 +831,6 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
 
-        // Solo las imágenes con clase .lightbox-trigger abren el lightbox
         document.querySelectorAll('.lightbox-trigger img').forEach(img => {
             img.parentElement.addEventListener('click', () => {
                 lightboxImg.src = img.src;
@@ -908,17 +906,35 @@
             });
         }
 
-        // --- MUSIC LOGIC (Local Files with fallback) ---
+        // --- MUSIC LOGIC ---
         let isPlaying = false;
         const albumArt = document.getElementById('albumArt');
         const playBtn = document.getElementById('playBtn');
         const audio = new Audio();
-        // [EDITAR MÚSICA] Lista de canciones locales
-        const tracks = ['track1.mp3', 'track2.mp3', 'track3.mp3', 'track4.mp3']; 
-        let currentTrack = 0;
+        
+        // [EDITAR LISTA DE CANCIONES]
+        const trackList = [
+            { title: "Wake Me Up", artist: "The Weeknd", file: "track1.mp3" },
+            { title: "Drive", artist: "The Weeknd", file: "track2.mp3" },
+            { title: "I Feel It Coming", artist: "The Weeknd", file: "track3.mp3" },
+            { title: "Less Than Zero", artist: "The Weeknd", file: "track4.mp3" }
+        ];
+        
+        let currentTrackIndex = 0;
+
+        function updatePlayerUI() {
+            trackTitle.innerText = trackList[currentTrackIndex].title;
+            trackArtist.innerText = trackList[currentTrackIndex].artist;
+            audio.src = trackList[currentTrackIndex].file;
+            if(isPlaying) {
+                audio.play().catch(e => console.log("Audio play error", e));
+            }
+        }
+
+        updatePlayerUI();
 
         function togglePlay() {
-            if (!audio.src) audio.src = tracks[currentTrack];
+            if (!audio.src) updatePlayerUI();
             
             isPlaying = !isPlaying;
             if (isPlaying) { 
@@ -931,20 +947,20 @@
                 audio.pause();
             }
         }
+
         function nextTrack() { 
             gsap.fromTo(".track-info", {opacity: 0, x: 10}, {opacity: 1, x: 0, duration: 0.5});
-            currentTrack = (currentTrack + 1) % tracks.length;
-            audio.src = tracks[currentTrack];
-            if(isPlaying) audio.play().catch(e => {});
-        }
-        function prevTrack() { 
-            gsap.fromTo(".track-info", {opacity: 0, x: -10}, {opacity: 1, x: 0, duration: 0.5});
-            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-            audio.src = tracks[currentTrack];
-            if(isPlaying) audio.play().catch(e => {});
+            currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
+            updatePlayerUI();
         }
 
-        // --- VIDEO CONTROL FUNCTIONS (Nuevo) ---
+        function prevTrack() { 
+            gsap.fromTo(".track-info", {opacity: 0, x: -10}, {opacity: 1, x: 0, duration: 0.5});
+            currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
+            updatePlayerUI();
+        }
+
+        // --- VIDEO CONTROL FUNCTIONS ---
         function toggleVideoPlay() {
             const v = document.querySelector('video');
             if(v.paused) v.play();
@@ -964,12 +980,18 @@
             document.querySelector('video').volume = val;
         }
 
-        gsap.to(".chrome-render", {
-            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 0.5 },
-            y: 200, x: -100, scale: 1.8, rotation: 25, 
-            filter: "contrast(1.5) brightness(1.2) saturate(1.8) hue-rotate(30deg)", 
-            transformOrigin: "center center", 
-            ease: "power1.inOut"
+        // --- PARALLAX RESPONSIVE ---
+        let mm = gsap.matchMedia();
+
+        mm.add("(min-width: 769px)", () => {
+            // Parallax Desktop: Animación original
+            gsap.to(".chrome-render", {
+                scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 0.5 },
+                y: 200, x: -100, scale: 1.8, rotation: 25, 
+                filter: "contrast(1.5) brightness(1.2) saturate(1.8) hue-rotate(30deg)", 
+                transformOrigin: "center center", 
+                ease: "power1.inOut"
+            });
         });
 
         gsap.from(".gallery-item", {
@@ -984,6 +1006,3 @@
     </script>
 </body>
 </html>
-
-
-
