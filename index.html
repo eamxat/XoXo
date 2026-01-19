@@ -38,7 +38,7 @@
         ========================================================================
     -->
     
-    <title>NEXUS | Chrome Edition</title>
+    <title>Eam96 | Chrome Edition</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -580,9 +580,9 @@
     </div>
 
     <!-- MODELO PARALLAX -->
-    <!-- [EDITAR IMAGEN HERO] Archivo: background.png -->
+    <!-- [EDITAR IMAGEN HERO] Archivo: background.jpg -->
     <div class="parallax-wrapper">
-        <img src="background.png" onerror="this.src='https://pbs.twimg.com/media/DGUsIzpUQAE8a8n.jpg'" class="chrome-render" alt="Liquid Chrome Background">
+        <img src="background.jpg" onerror="this.src='https://pbs.twimg.com/media/DGUsIzpUQAE8a8n.jpg'" class="chrome-render" alt="Liquid Chrome Background">
     </div>
     <div class="parallax-overlay"></div>
 
@@ -598,8 +598,8 @@
     <nav class="fixed w-full z-50 top-16 px-4 md:px-8 py-6 flex justify-between items-center text-white mix-blend-exclusion" id="navbar">
         <div class="flex flex-col group cursor-none hover-trigger">
             <!-- [EDITAR LOGO] Texto NEXUS -->
-            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">NEXUS©</span>
-            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">CHROME EDITION</span>
+            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">EAM©</span>
+            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">Xatspace Seller</span>
         </div>
         
         <!-- [EDITAR LINKS] Menú de navegación CENTRADO -->
@@ -831,6 +831,7 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
 
+        // Solo las imágenes con clase .lightbox-trigger abren el lightbox
         document.querySelectorAll('.lightbox-trigger img').forEach(img => {
             img.parentElement.addEventListener('click', () => {
                 lightboxImg.src = img.src;
@@ -962,7 +963,7 @@
             updatePlayerUI();
         }
 
-        // --- VIDEO CONTROL FUNCTIONS ---
+        // --- VIDEO CONTROL FUNCTIONS (Nuevo) ---
         function toggleVideoPlay() {
             const v = document.querySelector('video');
             if(v.paused) v.play();
