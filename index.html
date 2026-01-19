@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -38,7 +38,7 @@
         ========================================================================
     -->
     
-    <title>EAM | Chrome Edition</title>
+    <title>Eam96 Xatspace 2.0</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -68,36 +68,20 @@
             overflow-x: hidden;
         }
 
-        /* --- BOTÓN OPTIMIZAR (SOLO MÓVIL - ESTILO NEON GLASS) --- */
+        /* --- BOTÓN OPTIMIZAR (SOLO MÓVIL) --- */
         .optimize-btn {
             position: fixed; top: 100px; right: 20px; z-index: 99999;
-            background: rgba(0, 243, 255, 0.05); /* Fondo sutil */
-            border: 1px solid var(--neon-accent);
-            color: #fff; 
-            padding: 10px 16px; 
-            border-radius: 50px; /* Bordes redondeados como los otros botones */
-            font-family: 'Space Grotesk', sans-serif; 
-            font-size: 11px; 
-            font-weight: bold;
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            backdrop-filter: blur(10px); 
-            cursor: pointer; 
+            background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon-accent);
+            color: #fff; padding: 10px 16px; border-radius: 50px;
+            font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 1px;
+            backdrop-filter: blur(10px); cursor: pointer; 
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
             transition: all 0.3s ease;
-            display: none; /* Oculto por defecto, se activa en JS tras splash */
+            display: none;
         }
-        .optimize-btn:hover {
-            background: rgba(0, 243, 255, 0.15);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
-            transform: scale(1.05);
-        }
-        .optimize-btn:active { 
-            transform: scale(0.95); 
-            background: var(--neon-accent); 
-            color: #000; 
-        }
-        /* Ocultar en PC (Media Query redundante de seguridad) */
+        .optimize-btn:hover { background: rgba(0, 243, 255, 0.15); box-shadow: 0 0 25px rgba(0, 243, 255, 0.4); transform: scale(1.05); }
+        .optimize-btn:active { transform: scale(0.95); background: var(--neon-accent); color: #000; }
         @media (min-width: 769px) { .optimize-btn { display: none !important; } }
 
         /* --- LIGHTBOX --- */
@@ -554,6 +538,20 @@
             overflow: visible; box-shadow: 0 0 30px rgba(0,0,0,0.5); background: #000; z-index: 10;
         }
         .video-container video { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; position: relative; z-index: 10; }
+        
+        /* Video Overlay Controls (Nuevo) */
+        .video-overlay-controls {
+            position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+            width: 90%;
+            background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 20;
+        }
+        .video-container:hover .video-overlay-controls {
+            opacity: 1; pointer-events: auto;
+        }
 
         /* Footer Fix - Corrección Visual */
         footer {
@@ -638,7 +636,7 @@
     <!-- MODELO PARALLAX -->
     <!-- [EDITAR IMAGEN HERO] Archivo: background.jpg -->
     <div class="parallax-wrapper">
-        <img src="background.jpg" class="chrome-render" alt="Liquid Chrome Background">
+        <img src="background.jpg" onerror="this.src='https://pbs.twimg.com/media/DGUsIzpUQAE8a8n.jpg'" class="chrome-render" alt="Liquid Chrome Background">
     </div>
     <div class="parallax-overlay"></div>
 
@@ -854,7 +852,7 @@
                      </div>
                 </div>
                 <!-- [EDITAR VIDEO] video-main.mp4 -->
-                <!-- Removed 'autoplay' to fix audio issue (browsers block autoplay with sound) -->
+                <!-- Removed autoplay and muted to fix playback with sound -->
                 <video loop playsinline>
                     <source src="video-main.mp4" type="video/mp4">
                     Tu navegador no soporta video.
@@ -927,7 +925,7 @@
                         const tl = gsap.timeline();
                         tl.from(".reveal-text", { y: 200, duration: 1.8, stagger: 0.15, ease: "power4.out", skewY: 10 })
                           .from(".chrome-render", { scale: 1.1, opacity: 0, duration: 2.5, ease: "power2.out" }, "-=1.5");
-
+                        
                         // Show mobile optimize button after splash
                         if(window.matchMedia("(max-width: 768px)").matches) {
                             document.getElementById('optimize-btn').style.display = 'block';
@@ -1024,28 +1022,6 @@
             updatePlayerUI();
         }
 
-       
-       // --- VIDEO CONTROL FUNCTIONS ---
-        function toggleVideoPlay() {
-            const v = document.querySelector('video');
-            if(v.paused) v.play();
-            else v.pause();
-        }
-        function stopVideo() {
-            const v = document.querySelector('video');
-            v.pause();
-            v.currentTime = 0;
-        }
-        function replayVideo() {
-            const v = document.querySelector('video');
-            v.currentTime = 0;
-            v.play();
-        }
-        function setVideoVolume(val) {
-            document.querySelector('video').volume = val;
-        }
-
-
         // --- PARALLAX RESPONSIVE ---
         let mm = gsap.matchMedia();
 
@@ -1096,6 +1072,7 @@
     </script>
 </body>
 </html>
+
 
 
 
