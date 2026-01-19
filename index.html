@@ -38,7 +38,7 @@
         ========================================================================
     -->
     
-    <title>Eam96 | Chrome Edition</title>
+    <title>NEXUS | Chrome Edition</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -580,8 +580,9 @@
     </div>
 
     <!-- MODELO PARALLAX -->
+    <!-- [EDITAR IMAGEN HERO] Archivo: hero.png -->
     <div class="parallax-wrapper">
-        <img src="background.jpg" class="chrome-render" alt="Liquid Chrome Background">
+        <img src="hero.png" onerror="this.src='https://pbs.twimg.com/media/DGUsIzpUQAE8a8n.jpg'" class="chrome-render" alt="Liquid Chrome Background">
     </div>
     <div class="parallax-overlay"></div>
 
@@ -593,20 +594,23 @@
     </div>
 
     <!-- NAVEGACIÓN -->
+    <!-- [EDITAR NAV] Ubicación: Barra superior -->
     <nav class="fixed w-full z-50 top-16 px-4 md:px-8 py-6 flex justify-between items-center text-white mix-blend-exclusion" id="navbar">
         <div class="flex flex-col group cursor-none hover-trigger">
-            <!-- [EDITAR LOGO] -->
-            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">EAM96©</span>
-            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">Xatspace Seller</span>
+            <!-- [EDITAR LOGO] Texto NEXUS -->
+            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">NEXUS©</span>
+            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">CHROME EDITION</span>
         </div>
         
-        <!-- [EDITAR LINKS] -->
+        <!-- [EDITAR LINKS] Menú de navegación CENTRADO -->
+        <!-- Uso de absolute para centrado perfecto -->
         <div class="hidden md:flex gap-12 font-mono text-xs uppercase tracking-widest absolute left-1/2 -translate-x-1/2">
             <a href="#portafolio" class="hover-trigger relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all">Portafolio</a>
             <a href="#galeria" class="hover-trigger relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all">Galería</a>
             <a href="#musica" class="hover-trigger relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all">Música</a>
         </div>
         
+        <!-- BOTÓN MENU ELIMINADO CORRECTAMENTE -->
     </nav>
 
     <main class="relative z-10">
@@ -637,11 +641,12 @@
                 </div>
             </div>
             <div class="max-w-4xl ml-auto relative z-20">
-                <!-- [EDITAR TEXTO PRINCIPAL] -->
+                <!-- [EDITAR TEXTO PRINCIPAL] Archivo: index.html -->
                 <p class="text-3xl md:text-5xl font-syne font-bold leading-tight mb-12 text-gray-200">
                     <span class="chrome-text">“Un gran diseño no busca atención, la merece.”</span><br>
                     <span class="text-xl md:text-2xl opacity-70 block mt-4">— Dieter Rams</span>
                 </p>
+                <!-- Renders numerados eliminados -->
             </div>
         </section>
 
@@ -657,7 +662,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full px-0 md:px-4">
                 
                 <!-- [EDITAR IMAGEN 1] gallery-1.jpg -->
-               <!-- [EDITAR IMAGEN 1] gallery-1.jpg -->
                 <div class="gallery-item group cursor-none hover-trigger" onclick="window.open('https://xat.me/QU3N')">
                     <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
                         <img src="gallery-1.jpg" class="w-full h-full object-cover" alt="Project 1">
@@ -668,7 +672,7 @@
                     </div>
                 </div>
 
-         <!-- [EDITAR IMAGEN 2] gallery-2.jpg -->
+                <!-- [EDITAR IMAGEN 2] gallery-2.jpg -->
                 <div class="gallery-item group cursor-none hover-trigger md:mt-32" onclick="window.open('https://xat.me/spinelly69')">
                     <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
                         <img src="gallery-2.jpg" class="w-full h-full object-cover" alt="Project 2">
@@ -679,7 +683,7 @@
                     </div>
                 </div>
 
-             <!-- [EDITAR IMAGEN 3] gallery-3.jpg -->
+                <!-- [EDITAR IMAGEN 3] gallery-3.jpg -->
                 <div class="gallery-item group cursor-none hover-trigger" onclick="window.open('URL AQUÍ')">
                     <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
                         <img src="gallery-3.jpg" class="w-full h-full object-cover" alt="Project 3">
@@ -794,7 +798,7 @@
                      </div>
                 </div>
                 <!-- [EDITAR VIDEO] video-main.mp4 -->
-                <video loop muted autoplay playsinline>
+                <video loop playsinline>
                     <source src="video-main.mp4" type="video/mp4">
                     Tu navegador no soporta video.
                 </video>
@@ -827,7 +831,6 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
 
-        // Solo las imágenes con clase .lightbox-trigger abren el lightbox
         document.querySelectorAll('.lightbox-trigger img').forEach(img => {
             img.parentElement.addEventListener('click', () => {
                 lightboxImg.src = img.src;
@@ -889,7 +892,11 @@
                 window.addEventListener("mousemove", (e) => {
                     cursorDot.style.left = e.clientX + 'px';
                     cursorDot.style.top = e.clientY + 'px';
-                    cursorOutline.animate({ left: e.clientX + "px", top: e.clientY + "px" }, { duration: 100, fill: "forwards" });
+                    
+                    cursorOutline.animate({
+                        left: e.clientX + "px",
+                        top: e.clientY + "px"
+                    }, { duration: 100, fill: "forwards" });
                 });
                 
                 document.querySelectorAll('.hover-trigger').forEach(el => {
@@ -994,6 +1001,6 @@
         });
     </script>
 </body>
-
 </html>
+
 
