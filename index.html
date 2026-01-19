@@ -798,8 +798,8 @@
                      </div>
                 </div>
                 <!-- [EDITAR VIDEO] video-main.mp4 -->
-                <!-- Removed 'autoplay' to fix audio issue (browsers block autoplay with sound) -->
-                <video loop playsinline>
+                <!-- Removed 'controls' attribute, relying on custom overlay -->
+                <video loop muted autoplay playsinline>
                     <source src="video-main.mp4" type="video/mp4">
                     Tu navegador no soporta video.
                 </video>
@@ -908,37 +908,17 @@
             });
         }
 
-        // --- MUSIC LOGIC ---
+        // --- MUSIC LOGIC (Local Files with fallback) ---
         let isPlaying = false;
         const albumArt = document.getElementById('albumArt');
         const playBtn = document.getElementById('playBtn');
-        const trackTitle = document.querySelector('.track-info');
-        const trackArtist = document.querySelector('.track-artist');
         const audio = new Audio();
-        
-        // [EDITAR LISTA DE CANCIONES]
-        const trackList = [
-            { title: "Wake Me Up", artist: "The Weeknd", file: "track1.mp3" },
-            { title: "Drive", artist: "The Weeknd", file: "track2.mp3" },
-            { title: "I Feel It Coming", artist: "The Weeknd", file: "track3.mp3" },
-            { title: "Less Than Zero", artist: "The Weeknd", file: "track4.mp3" }
-        ];
-        
-        let currentTrackIndex = 0;
-
-        function updatePlayerUI() {
-            trackTitle.innerText = trackList[currentTrackIndex].title;
-            trackArtist.innerText = trackList[currentTrackIndex].artist;
-            audio.src = trackList[currentTrackIndex].file;
-            if(isPlaying) {
-                audio.play().catch(e => console.log("Audio play error", e));
-            }
-        }
-
-        updatePlayerUI();
+        // [EDITAR MÚSICA] Lista de canciones locales
+        const tracks = ['track1.mp3', 'track2.mp3', 'track3.mp3', 'track4.mp3']; 
+        let currentTrack = 0;
 
         function togglePlay() {
-            if (!audio.src) updatePlayerUI();
+            if (!audio.src) audio.src = tracks[currentTrack];
             
             isPlaying = !isPlaying;
             if (isPlaying) { 
@@ -951,22 +931,20 @@
                 audio.pause();
             }
         }
-
         function nextTrack() { 
             gsap.fromTo(".track-info", {opacity: 0, x: 10}, {opacity: 1, x: 0, duration: 0.5});
-            currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
-            updatePlayerUI();
+            currentTrack = (currentTrack + 1) % tracks.length;
+            audio.src = tracks[currentTrack];
+            if(isPlaying) audio.play().catch(e => {});
         }
-
         function prevTrack() { 
             gsap.fromTo(".track-info", {opacity: 0, x: -10}, {opacity: 1, x: 0, duration: 0.5});
-            currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
-            updatePlayerUI();
+            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+            audio.src = tracks[currentTrack];
+            if(isPlaying) audio.play().catch(e => {});
         }
 
-        // --- VIDEO CONTROL FUNCTIONS ---
-        // Se cambió lógica de video para que no sea autoplay con sonido (bloqueado por navegadores)
-        // Ahora inicia pausado y requiere click para play con audio.
+        // --- VIDEO CONTROL FUNCTIONS (Nuevo) ---
         function toggleVideoPlay() {
             const v = document.querySelector('video');
             if(v.paused) v.play();
