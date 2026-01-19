@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 
+        ========================================================================
+        GUÍA DE ARCHIVOS PARA GITHUB (SUBIR EN LA RAÍZ DEL REPOSITORIO)
+        ========================================================================
+        
+        Sube tus archivos con estos NOMBRES EXACTOS (respetando minúsculas):
+
+        1. PANTALLA INICIO & FONDO:
+           - Render Flotante (Inicio): hero.png
+           - Fondo Parallax (Atrás):   background.jpg
+           
+        2. PORTAFOLIO (4 Imágenes):
+           - gallery-1.jpg, gallery-2.jpg, gallery-3.jpg, gallery-4.jpg
+           
+        3. GALERÍA CARRUSEL 3D (6 Imágenes):
+           - carousel-1.jpg
+           - carousel-2.jpg
+           - carousel-3.jpg
+           - carousel-4.jpg
+           - carousel-5.jpg
+           - carousel-6.jpg
+           
+        4. SECCIÓN FINAL:
+           - Fondo Bonus: bonus.jpg
+           
+        5. MULTIMEDIA:
+           - Portada Música: cover.jpg
+           - Video:          video-main.mp4
+           - Canciones:      track1.mp3, track2.mp3, track3.mp3, track4.mp3
+
+           codigo creado por ©2026 Eam96           
+        ========================================================================
+    -->
+    
+    <title>Eam96 | Chrome Edition</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #e0e0e0;
+            --neon-white: #ffffff;
+            --chrome-glow: rgba(255, 255, 255, 0.8);
+            --neon-accent: #00f3ff;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; inset: 0; z-index: 20000;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        #lightbox.active { opacity: 1; pointer-events: all; }
+        #lightbox img {
+            max-width: 90vw; max-height: 90vh;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 50px rgba(255,255,255,0.1);
+            transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        #lightbox.active img { transform: scale(1); }
+        #lightbox-close {
+            position: absolute; top: 2rem; right: 2rem;
+            color: white; font-family: 'Syne', sans-serif; font-size: 2rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        #lightbox-close:hover { color: var(--neon-accent); transform: rotate(90deg); }
+
+        /* --- PANTALLA DE INICIO --- */
+        #splash-screen {
+            position: fixed; inset: 0; background: #000; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease-in-out;
+            overflow: hidden;
+        }
+
+        /* RENDER INICIO */
+        .splash-render {
+            position: absolute; top: 50%; left: 50%;
+            height: 85vh; width: auto; max-width: 95vw;
+            z-index: 10; object-fit: contain;
+            transition: filter 0.5s ease;
+            animation: floatRender 6s ease-in-out infinite;
+            cursor: default;
+        }
+        .splash-render:hover {
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.8)) brightness(1.3) contrast(1.2);
+        }
+        @keyframes floatRender {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-25px); }
+        }
+
+        /* Botón Iniciar */
+        #start-btn {
+            position: relative;
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 1.5rem 4rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            z-index: 20;
+            overflow: hidden;
+        }
+        #start-btn::before {
+            content: ''; position: absolute; inset: -5px;
+            border: 1px solid transparent;
+            border-top-color: #ffffff;
+            border-bottom-color: #ffffff;
+            animation: rotateBorder 2s linear infinite;
+            opacity: 0.5;
+        }
+        #start-btn:hover {
+            background: #ffffff; color: #000;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.4em;
+        }
+        @keyframes rotateBorder {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+
+        #start-btn.loading {
+            width: 80px; height: 80px; padding: 0; border-radius: 50%;
+            color: transparent; border-color: #fff; background: transparent;
+            box-shadow: 0 0 30px #fff, inset 0 0 20px #fff;
+        }
+        #start-btn.loading::before { display: none; }
+        
+        .loading-wormhole {
+            position: absolute; top: 50%; left: 50%;
+            width: 100%; height: 100%; pointer-events: none;
+            transform: translate(-50%, -50%);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        #start-btn.loading .loading-wormhole { opacity: 1; }
+        
+        .load-ring {
+            position: absolute; top: 50%; left: 50%; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.8);
+            transform: translate(-50%, -50%);
+            animation: loadSpin 1s infinite linear;
+        }
+        .load-ring:nth-child(1) { width: 100%; height: 100%; border-color: #fff; animation-duration: 1s; }
+        .load-ring:nth-child(2) { width: 70%; height: 70%; border-top-color: transparent; animation-duration: 0.8s; animation-direction: reverse; }
+        .load-ring:nth-child(3) { width: 40%; height: 40%; border-bottom-color: transparent; animation-duration: 0.6s; }
+
+        @keyframes loadSpin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* --- GRID FUTURISTA --- */
+        .cyber-grid {
+            position: absolute; inset: -50%; width: 200%; height: 200%; pointer-events: none; z-index: 0;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.15) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            transform-origin: center center;
+            transform: perspective(500px) rotateX(60deg) translateY(0) scale(1);
+            mask-image: radial-gradient(circle, black 30%, transparent 80%);
+            animation: gridFlow 15s linear infinite;
+            opacity: 0.5; 
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
+        }
+        @keyframes gridFlow { 
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0) scale(1); } 
+            100% { transform: perspective(500px) rotateX(60deg) translateY(40px) scale(1); } 
+        }
+        .cyber-grid.expanding {
+            transform: perspective(500px) rotateX(0deg) scale(5) translateY(0);
+            opacity: 0;
+        }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #333, #fff, #333);
+            border-radius: 5px; border: 2px solid #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #555, #fff, #555); }
+
+        /* --- CURSOR --- */
+        @media (pointer: fine) {
+            body { cursor: none; }
+            .cursor-dot, .cursor-outline {
+                display: block; position: fixed; 
+                top: 0; left: 0; transform: translate(-50%, -50%); 
+                border-radius: 50%; z-index: 9999; pointer-events: none;
+            }
+            .cursor-dot { width: 6px; height: 6px; background-color: #fff; box-shadow: 0 0 10px #fff; }
+            .cursor-outline {
+                width: 40px; height: 40px; 
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+                background: rgba(255, 255, 255, 0.02);
+                backdrop-filter: blur(1px);
+                transition: width 0.15s ease-out, height 0.15s ease-out;
+                will-change: width, height, transform;
+            }
+            body:hover .cursor-outline.hovered {
+                width: 60px; height: 60px; border-color: #fff;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.1);
+            }
+        }
+        @media (pointer: coarse) { .cursor-dot, .cursor-outline { display: none !important; } body { cursor: auto; } }
+
+        /* --- TIPOGRAFÍA --- */
+        h1, h2, h3, .font-syne { font-family: 'Syne', sans-serif; }
+        .mega-text { 
+            font-size: clamp(2.8rem, 13vw, 12rem); 
+            line-height: 0.9; 
+            letter-spacing: -0.04em; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            word-wrap: break-word; overflow-wrap: break-word;
+        }
+
+        /* --- EFECTO CROMO --- */
+        .chrome-text {
+            background: linear-gradient(to right, #444 0%, #fff 40%, #fff 60%, #444 100%);
+            background-size: 200% auto; color: #000;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* --- DYNAMICS --- */
+        .dynamics-text {
+            position: relative; color: rgba(255,255,255,0.4); 
+            font-style: italic; transition: 0.3s;
+            background: linear-gradient(90deg, transparent, #fff, transparent) no-repeat;
+            background-size: 0% 100%; background-position: 0% 50%;
+            -webkit-background-clip: text;
+        }
+        .dynamics-text:hover {
+            color: rgba(255,255,255,0.1);
+            background-size: 200% 100%;
+            animation: scanText 1s ease infinite;
+            letter-spacing: 0.2em;
+        }
+        @keyframes scanText { 0% { background-position: -100% 0; } 100% { background-position: 200% 0; } }
+
+        /* --- RED DE LÍNEAS --- */
+        .grid-lines {
+            position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1;
+            display: flex; justify-content: space-between; padding: 0 5vw;
+        }
+        .line { width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.08), transparent); }
+
+        /* --- PARALLAX --- */
+        .parallax-wrapper {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: flex-end; 
+            mix-blend-mode: screen; 
+        }
+        .chrome-render {
+            width: 100vw; max-width: none; height: auto; 
+            min-height: 100vh;
+            filter: contrast(1.1) brightness(1.2) saturate(0.2); 
+            opacity: 0.9; 
+            object-fit: cover; object-position: right center;
+            transform-origin: center center;
+        }
+        @media (min-width: 768px) { 
+            .chrome-render { width: 110vw; right: -10vw; position: relative; } 
+        }
+        .parallax-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 1;
+            background: linear-gradient(to bottom, #050505 0%, #050505 5%, transparent 30%, transparent 70%, #050505 95%, #050505 100%);
+        }
+
+        /* --- NAV --- */
+        nav { transition: all 0.4s ease; }
+        nav.nav-scrolled {
+            background: rgba(5, 5, 5, 0.6); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; padding-bottom: 1rem;
+        }
+
+        /* --- BOTONES --- */
+        .btn-liquid {
+            position: relative; padding: 0.6rem 2rem; border-radius: 100px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden; transition: all 0.3s ease; text-transform: uppercase;
+            font-size: 0.75rem; letter-spacing: 0.1em; color: #fff; backdrop-filter: blur(5px);
+            cursor: pointer;
+        }
+        .btn-liquid::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+        .btn-liquid:hover::before { left: 100%; }
+        .btn-liquid:hover { border-color: #fff; box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); text-shadow: 0 0 8px rgba(255,255,255,0.8); }
+
+        /* --- GALERÍA (ESTILO) --- */
+        .gallery-item { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        .gallery-item img { transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), filter 0.5s; filter: grayscale(100%) brightness(0.8); }
+        .gallery-item:hover img { transform: scale(1.05); filter: grayscale(0%) brightness(1.1); }
+        .gallery-item::after {
+            content: ""; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            transform: skewX(-25deg); transition: left 0.7s ease; pointer-events: none;
+        }
+        .gallery-item:hover::after { left: 150%; }
+
+        /* --- SLIDER 3D --- */
+        .slider-3d-container {
+            perspective: 1000px; height: 500px; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .slider-3d-wrap {
+            position: relative; width: 300px; height: 400px; transform-style: preserve-3d; animation: rotateSlider 20s infinite linear;
+        }
+        @media (max-width: 768px) { .slider-3d-wrap { transform: scale(0.6); } }
+
+        .slider-card {
+            position: absolute; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: center; overflow: hidden; transition: 0.3s;
+            cursor: pointer;
+        }
+        .slider-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+        .slider-card:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+        .slider-card:hover img { opacity: 1; filter: contrast(1.2); }
+
+        .slider-card:nth-child(1) { transform: rotateY(0deg) translateZ(400px); }
+        .slider-card:nth-child(2) { transform: rotateY(60deg) translateZ(400px); }
+        .slider-card:nth-child(3) { transform: rotateY(120deg) translateZ(400px); }
+        .slider-card:nth-child(4) { transform: rotateY(180deg) translateZ(400px); }
+        .slider-card:nth-child(5) { transform: rotateY(240deg) translateZ(400px); }
+        .slider-card:nth-child(6) { transform: rotateY(300deg) translateZ(400px); }
+
+        @keyframes rotateSlider { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        .slider-3d-wrap:hover { animation-play-state: paused; }
+
+        /* --- PLAYER --- */
+        .music-player {
+            position: relative; 
+            width: 100%; max-width: 400px;
+            background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 20px; padding: 1rem 1.5rem; 
+            display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+            margin: 2rem auto; 
+            transition: all 0.3s;
+            z-index: 20;
+        }
+        .music-player:hover { border-color: rgba(255, 255, 255, 0.6); transform: scale(1.02); }
+        
+        .album-art {
+            width: 50px; height: 50px; border-radius: 12px;
+            background-image: url('cover.jpg'); /* Fichero local */
+            background-size: cover; border: 1px solid rgba(255,255,255,0.3); position: relative; overflow: hidden;
+            transition: all 0.3s;
+        }
+        .album-art::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100%;
+            background: linear-gradient(to top, var(--neon-accent), transparent);
+            opacity: 0; transition: 0.3s; mix-blend-mode: color-dodge;
+        }
+        .album-art.playing { box-shadow: 0 0 15px var(--neon-accent), 0 0 30px rgba(0, 243, 255, 0.4); border-color: #fff; }
+        .album-art.playing::after { opacity: 0.6; animation: pulseGlow 1s infinite alternate; }
+        @keyframes pulseGlow { 0% { height: 20%; } 100% { height: 80%; } }
+
+        .player-controls { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .track-info { font-size: 0.8rem; font-weight: bold; color: #fff; margin-bottom: 2px; }
+        .track-artist { color: rgba(255,255,255,0.6); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        .buttons { display: flex; gap: 15px; align-items: center; margin-top: 8px; }
+        .control-btn { cursor: pointer; color: rgba(255,255,255,0.7); transition: 0.2s; background: none; border: none;}
+        .control-btn:hover { color: #fff; transform: scale(1.1); filter: drop-shadow(0 0 5px white); }
+
+        .volume-container { display: flex; align-items: center; gap: 5px; }
+        .volume-slider { -webkit-appearance: none; width: 60px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; outline: none; cursor: pointer; }
+        .volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; border-radius: 50%; background: #fff; cursor: pointer; box-shadow: 0 0 5px rgba(255,255,255,0.8); }
+
+        /* --- WIREFRAME SPHERES & HOLES --- */
+        .wireframe-sphere { width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateSphere 20s infinite linear; }
+        .sphere-ring {
+            position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; transform: translate(-50%, -50%);
+        }
+        .sphere-ring:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg); }
+        .sphere-ring:nth-child(2) { transform: translate(-50%, -50%) rotateY(30deg); }
+        .sphere-ring:nth-child(3) { transform: translate(-50%, -50%) rotateY(60deg); }
+        .sphere-ring:nth-child(4) { transform: translate(-50%, -50%) rotateY(90deg); }
+        .sphere-ring:nth-child(5) { transform: translate(-50%, -50%) rotateY(120deg); }
+        .sphere-ring:nth-child(6) { transform: translate(-50%, -50%) rotateY(150deg); }
+        @keyframes rotateSphere { 0% { transform: rotateX(0) rotateY(0); } 100% { transform: rotateX(360deg) rotateY(360deg); } }
+
+        .wireframe-hole { width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateHole 15s infinite linear; }
+        .hole-ring {
+            position: absolute; top: 50%; left: 50%; border: 1px solid #ffffff; border-radius: 50%;
+            transform: translate(-50%, -50%); box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .hole-ring:nth-child(1) { width: 100%; height: 100%; transform: translate(-50%, -50%) translateZ(0px); opacity: 0.1; }
+        .hole-ring:nth-child(2) { width: 80%; height: 80%; transform: translate(-50%, -50%) translateZ(-20px); opacity: 0.3; }
+        .hole-ring:nth-child(3) { width: 60%; height: 60%; transform: translate(-50%, -50%) translateZ(-40px); opacity: 0.5; }
+        .hole-ring:nth-child(4) { width: 40%; height: 40%; transform: translate(-50%, -50%) translateZ(-60px); opacity: 0.7; }
+        .hole-ring:nth-child(5) { width: 20%; height: 20%; transform: translate(-50%, -50%) translateZ(-80px); opacity: 0.9; }
+        @keyframes rotateHole { 0% { transform: rotateX(60deg) rotateZ(0deg); } 100% { transform: rotateX(60deg) rotateZ(360deg); } }
+
+        footer:hover .wireframe-hole { animation-duration: 2s; }
+        footer:hover .hole-ring {
+            border-color: transparent;
+            background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 5px 5px;
+            box-shadow: 0 0 10px #fff, inset 0 0 20px rgba(255,255,255,0.5);
+        }
+        footer:hover .hole-ring:nth-child(1) { transform: translate(-50%, -50%) translateZ(50px) rotateX(45deg) scale(1.2); }
+        footer:hover .hole-ring:nth-child(2) { transform: translate(-50%, -50%) translateZ(0px) rotateY(-30deg) scale(1.1); }
+        
+        .sphere-container { position: absolute; pointer-events: none; opacity: 0.3; perspective: 1000px; }
+        .sphere-hero { top: 20%; right: 10%; width: 150px; height: 150px; opacity: 0.2; }
+        .sphere-section { bottom: 10%; left: 5%; width: 100px; height: 100px; opacity: 0.15; }
+        
+        .hole-footer-position { position: absolute; bottom: -50px; left: 10%; width: 300px; height: 300px; opacity: 0.5; z-index: 0; }
+        @media (max-width: 768px) { .hole-footer-position { left: 50%; transform: translateX(-50%); bottom: -100px; opacity: 0.3; } }
+
+        .hole-video-side {
+            position: absolute; top: 50%; right: -80px; transform: translateY(-50%);
+            width: 180px; height: 180px; opacity: 0.5; pointer-events: none; z-index: 0;
+        }
+        @media (max-width: 768px) { .hole-video-side { right: 50%; transform: translate(50%, -50%); opacity: 0.3; } }
+
+        /* --- PLANETA FINAL (XAT) --- */
+        .footer-planet-link {
+            position: relative;
+            display: block;
+            width: 120px;
+            height: 120px;
+            margin-top: 3rem;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .footer-planet-link:hover { transform: scale(1.1); }
+
+        .wireframe-planet {
+            width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            animation: rotatePlanet 10s infinite linear;
+        }
+
+        .planet-sphere-ring {
+            position: absolute; top: 50%; left: 50%;
+            width: 60%; height: 60%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+        .planet-sphere-ring:nth-child(1) { transform: translate(-50%, -50%) rotateY(0deg); }
+        .planet-sphere-ring:nth-child(2) { transform: translate(-50%, -50%) rotateY(45deg); }
+        .planet-sphere-ring:nth-child(3) { transform: translate(-50%, -50%) rotateY(90deg); }
+        .planet-sphere-ring:nth-child(4) { transform: translate(-50%, -50%) rotateY(135deg); }
+
+        .planet-outer-ring {
+            position: absolute; top: 50%; left: 50%;
+            border: 2px solid var(--neon-accent); /* Cyan accent */
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotateX(70deg);
+            box-shadow: 0 0 15px var(--neon-accent);
+            opacity: 0.8;
+        }
+        .planet-outer-ring:nth-child(5) { width: 140%; height: 140%; }
+        .planet-outer-ring:nth-child(6) { width: 120%; height: 120%; opacity: 0.5; border-width: 1px; }
+
+        @keyframes rotatePlanet {
+            0% { transform: rotateX(10deg) rotateY(0deg); }
+            100% { transform: rotateX(10deg) rotateY(360deg); }
+        }
+
+        /* --- SCANLINE --- */
+        .scanline-effect { position: relative; overflow: hidden; }
+        .scanline-effect::before {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+
+        /* Video Container (Nativo) */
+        .video-container {
+            position: relative; width: 100%; max-width: 600px; margin: 2rem auto;
+            aspect-ratio: 16 / 9; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            overflow: visible; box-shadow: 0 0 30px rgba(0,0,0,0.5); background: #000; z-index: 10;
+        }
+        .video-container video { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; position: relative; z-index: 10; }
+        
+        /* Video Overlay Controls (Nuevo) */
+        .video-overlay-controls {
+            position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+            width: 90%;
+            background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 20;
+        }
+        .video-container:hover .video-overlay-controls {
+            opacity: 1; pointer-events: auto;
+        }
+
+        /* Footer Fix - Corrección Visual */
+        footer {
+            position: relative; overflow: hidden; /* Cierra el footer limpiamente */
+            padding-bottom: 4rem;
+        }
+
+        /* Footer Signature Style */
+        .footer-sig { transition: all 0.3s ease; cursor: default; }
+        .footer-sig:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox">
+        <div id="lightbox-close">✕</div>
+        <img id="lightbox-img" src="" alt="Ampliada">
+    </div>
+
+    <!-- PANTALLA DE INICIO (SPLASH) con GRID -->
+    <div id="splash-screen">
+        <div class="cyber-grid"></div>
+        <!-- RENDER VISUAL INICIO -->
+        <img src="hero.png" alt="Nexus Render" class="splash-render">
+        <button id="start-btn">
+            <span class="btn-text">INICIAR</span>
+            <div class="loading-wormhole">
+                <div class="load-ring"></div><div class="load-ring"></div><div class="load-ring"></div>
+            </div>
+        </button>
+    </div>
+
+    <!-- Cursores -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Líneas Verticales -->
+    <div class="grid-lines">
+        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+
+    <!-- MODELO PARALLAX -->
+    <div class="parallax-wrapper">
+        <img src="background.jpg" class="chrome-render" alt="Liquid Chrome Background">
+    </div>
+    <div class="parallax-overlay"></div>
+
+    <!-- ESFERAS DECORATIVAS -->
+    <div class="sphere-container sphere-hero">
+        <div class="wireframe-sphere hover-trigger">
+            <div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div>
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="fixed w-full z-50 top-16 px-4 md:px-8 py-6 flex justify-between items-center text-white mix-blend-exclusion" id="navbar">
+        <div class="flex flex-col group cursor-none hover-trigger">
+            <!-- [EDITAR LOGO] -->
+            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">EAM96©</span>
+            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">Xatspace Seller</span>
+        </div>
+        
+        <!-- [EDITAR LINKS] -->
+        <div class="hidden md:flex gap-12 font-mono text-xs uppercase tracking-widest absolute left-1/2 -translate-x-1/2">
+            <a href="#portafolio" class="hover-trigger relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all">Portafolio</a>
+            <a href="#galeria" class="hover-trigger relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all">Galería</a>
+            <a href="#musica" class="hover-trigger relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-white hover:after:w-full after:transition-all">Música</a>
+        </div>
+        
+    </nav>
+
+    <main class="relative z-10">
+
+        <!-- HERO SECTION -->
+        <section class="min-h-screen flex flex-col justify-center px-4 md:px-12 pt-20 relative">
+            <div class="relative z-20 mix-blend-color-dodge"> 
+                <h1 class="mega-text py-[65px]">
+                    <div class="overflow-hidden"><span class="block reveal-text chrome-text">X0</span></div>
+                    <div class="overflow-hidden py-2"><span class="block reveal-text chrome-text hover-trigger">X0</span></div>
+                    <div class="overflow-hidden mt-0 pl-2 md:pl-4">
+                        <span class="dynamics-text hover-trigger text-[0.4em] font-bold">ID:98782298</span>
+                    </div>
+                </h1>
+            </div>
+            <div class="absolute bottom-12 right-6 md:right-12 w-64 text-right hidden md:block">
+                <p class="text-xs font-mono leading-relaxed text-gray-400">
+                    [ SCROLL DOWN ] <br> Reflecting Creative Design <br> Unique Xatspace.
+                </p>
+            </div>
+        </section>
+
+        <!-- STATEMENT SECTION -->
+        <section class="min-h-screen flex items-center px-4 md:px-12 py-32 relative">
+            <div class="sphere-container sphere-section">
+                <div class="wireframe-sphere hover-trigger" style="animation-direction: reverse;">
+                    <div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div><div class="sphere-ring"></div>
+                </div>
+            </div>
+            <div class="max-w-4xl ml-auto relative z-20">
+                <!-- [EDITAR TEXTO PRINCIPAL] -->
+                <p class="text-3xl md:text-5xl font-syne font-bold leading-tight mb-12 text-gray-200">
+                    <span class="chrome-text">“Un gran diseño no busca atención, la merece.”</span><br>
+                    <span class="text-xl md:text-2xl opacity-70 block mt-4">— Dieter Rams</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- PORTAFOLIO SECTION -->
+        <section id="portafolio" class="px-4 md:px-8 py-32 bg-[#050505] relative z-30 border-t border-white/10">
+            <div class="flex justify-between items-end mb-20 px-4">
+                <!-- [EDITAR TÍTULO PORTAFOLIO] -->
+                <h2 class="text-5xl md:text-8xl font-syne font-bold uppercase text-white">
+                    <span class="chrome-text hover-trigger transition-opacity duration-500 hover:opacity-100 opacity-80">Portafolio</span>
+                </h2>
+                <span class="font-mono text-xs border border-white/20 rounded-full px-4 py-2 backdrop-blur-md hidden md:inline-block">SELECTED</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full px-0 md:px-4">
+                
+                <!-- [EDITAR IMAGEN 1] gallery-1.jpg -->
+                <div class="gallery-item group cursor-none hover-trigger" onclick="window.open('https://xat.me/QU3N')">
+                    <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
+                        <img src="gallery-1.jpg" class="w-full h-full object-cover" alt="Project 1">
+                    </div>
+                    <div class="flex justify-between items-end border-b border-white/20 pb-4 group-hover:border-white transition-colors">
+                        <div><h3 class="text-2xl md:text-3xl font-syne font-bold mb-1">Project Eliza</h3><span class="font-mono text-xs text-gray-400">PINK</span></div>
+                        <div class="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all"><span class="text-lg">↗</span></div>
+                    </div>
+                </div>
+
+                <!-- [EDITAR IMAGEN 2] gallery-2.jpg -->
+                <div class="gallery-item group cursor-none hover-trigger md:mt-32" onclick="window.open('https://example.com/project2', '_blank')">
+                    <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
+                        <img src="gallery-2.jpg" class="w-full h-full object-cover" alt="Project 2">
+                    </div>
+                    <div class="flex justify-between items-end border-b border-white/20 pb-4 group-hover:border-white transition-colors">
+                        <div><h3 class="text-2xl md:text-3xl font-syne font-bold mb-1">Void Walker</h3><span class="font-mono text-xs text-gray-400">INTERFACE</span></div>
+                        <div class="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all"><span class="text-lg">↗</span></div>
+                    </div>
+                </div>
+
+                <!-- [EDITAR IMAGEN 3] gallery-3.jpg -->
+                <div class="gallery-item group cursor-none hover-trigger" onclick="window.open('https://example.com/project3', '_blank')">
+                    <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
+                        <img src="gallery-3.jpg" class="w-full h-full object-cover" alt="Project 3">
+                    </div>
+                    <div class="flex justify-between items-end border-b border-white/20 pb-4 group-hover:border-white transition-colors">
+                        <div><h3 class="text-2xl md:text-3xl font-syne font-bold mb-1">Cyber Core</h3><span class="font-mono text-xs text-gray-400">SYSTEM ARCHITECTURE</span></div>
+                        <div class="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all"><span class="text-lg">↗</span></div>
+                    </div>
+                </div>
+
+                <!-- [EDITAR IMAGEN 4] gallery-4.jpg -->
+                <div class="gallery-item group cursor-none hover-trigger md:mt-32" onclick="window.open('https://example.com/project4', '_blank')">
+                    <div class="aspect-[4/3] bg-neutral-900 overflow-hidden relative mb-6">
+                        <img src="gallery-4.jpg" class="w-full h-full object-cover" alt="Project 4">
+                    </div>
+                    <div class="flex justify-between items-end border-b border-white/20 pb-4 group-hover:border-white transition-colors">
+                        <div><h3 class="text-2xl md:text-3xl font-syne font-bold mb-1">Neon Flux</h3><span class="font-mono text-xs text-gray-400">MOTION</span></div>
+                        <div class="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all"><span class="text-lg">↗</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERÍA 3D SLIDER -->
+        <section id="galeria" class="px-4 md:px-8 py-32 bg-[#050505] relative z-30 border-t border-white/10 overflow-hidden">
+            <div class="flex flex-col items-center text-center mb-16 px-4">
+                <h2 class="text-5xl md:text-7xl font-syne font-bold uppercase text-white hover-trigger">
+                    <span class="chrome-text">Galería</span>
+                </h2>
+            </div>
+            <div class="slider-3d-container hover-trigger">
+                <!-- [EDITAR IMÁGENES CARRUSEL 3D] -->
+                <div class="slider-3d-wrap">
+                    <div class="slider-card lightbox-trigger"><img src="carousel-1.jpg" alt="Img 1"></div>
+                    <div class="slider-card lightbox-trigger"><img src="carousel-2.jpg" alt="Img 2"></div>
+                    <div class="slider-card lightbox-trigger"><img src="carousel-3.jpg" alt="Img 3"></div>
+                    <div class="slider-card lightbox-trigger"><img src="carousel-4.jpg" alt="Img 4"></div>
+                    <div class="slider-card lightbox-trigger"><img src="carousel-5.jpg" alt="Img 5"></div>
+                    <div class="slider-card lightbox-trigger"><img src="carousel-6.jpg" alt="Img 6"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BONUS SECTION -->
+        <section class="relative h-[80vh] w-full flex items-center justify-center overflow-hidden border-t border-white/10 bg-[#050505] z-30 scanline-effect">
+            <div class="absolute inset-0 w-full h-full bonus-parallax-wrapper overflow-hidden">
+                <!-- [EDITAR IMAGEN BONUS] bonus.jpg -->
+                <img src="bonus.jpg" class="w-full h-full object-cover opacity-90 bonus-image" style="transform: scale(1.1); filter: grayscale(100%) contrast(1.2);" alt="Futuristic Landscape">
+            </div>
+            <div class="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-[#050505] to-transparent pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#050505] to-transparent pointer-events-none"></div>
+        </section>
+
+        <!-- FOOTER & ELEMENTS -->
+        <footer id="musica" class="py-20 px-6 md:px-12 border-t border-white/10 flex flex-col items-center bg-[#050505] relative z-30 hover-trigger">
+            
+            <!-- Music Player -->
+            <div class="music-player hover-trigger">
+                <!-- [EDITAR AUDIO COVER] cover.jpg -->
+                <div class="album-art" id="albumArt" style="background-image: url('cover.jpg');"></div>
+                <div class="player-controls">
+                    <!-- [EDITAR TEXTO MÚSICA] -->
+                    <!-- Los textos iniciales se sobrescriben por JS, cambiar en trackList abajo -->
+                    <div class="track-info">Wake Me Up</div>
+                    <div class="track-artist">The Weeknd</div>
+                    <div class="buttons">
+                        <svg class="control-btn w-4 h-4" onclick="prevTrack()" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                        <svg class="control-btn w-5 h-5 text-white" id="playBtn" onclick="togglePlay()" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg class="control-btn w-4 h-4" onclick="nextTrack()" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                    </div>
+                </div>
+                <div class="volume-container">
+                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" class="text-gray-400"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                    <input type="range" min="0" max="100" value="70" class="volume-slider hover-trigger" oninput="audio.volume = this.value/100">
+                </div>
+            </div>
+
+            <div class="w-full flex justify-center items-center mb-12 mt-12">
+                <div>
+                    <!-- [EDITAR FOOTER NEXUS] -->
+                    <h2 class="text-[15vw] leading-none font-syne font-bold opacity-30 transition-opacity duration-500 chrome-text hover:opacity-100 cursor-pointer">NEXUS</h2>
+                </div>
+            </div>
+            
+            <!-- Agujero original -->
+            <div class="sphere-container hole-footer-position">
+                <div class="wireframe-hole">
+                    <div class="hole-ring"></div><div class="hole-ring"></div><div class="hole-ring"></div><div class="hole-ring"></div><div class="hole-ring"></div>
+                </div>
+            </div>
+
+            <!-- Video Container -->
+            <!-- Se agregó onclick para Play/Pause al hacer click en la caja -->
+            <div class="video-container hover-trigger" onclick="let v=this.querySelector('video'); v.paused ? v.play() : v.pause()">
+                <div class="wireframe-hole hole-video-side">
+                    <div class="hole-ring"></div><div class="hole-ring"></div><div class="hole-ring"></div><div class="hole-ring"></div><div class="hole-ring"></div>
+                </div>
+                <!-- Video Controls Overlay - Estilo Coherente con Música -->
+                <div class="video-overlay-controls" onclick="event.stopPropagation()">
+                     <div style="display:flex; gap:15px; align-items:center;">
+                         <!-- Play -->
+                         <svg class="control-btn w-5 h-5 text-white" onclick="document.querySelector('video').play()" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                         <!-- Stop -->
+                         <svg class="control-btn w-4 h-4" onclick="let v=document.querySelector('video'); v.pause(); v.currentTime=0;" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                         <!-- Replay -->
+                         <svg class="control-btn w-4 h-4" onclick="let v=document.querySelector('video'); v.currentTime=0; v.play();" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                     </div>
+                     
+                     <div class="volume-container">
+                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" class="text-gray-400"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="document.querySelector('video').volume=this.value" class="volume-slider hover-trigger" style="width: 60px;">
+                     </div>
+                </div>
+                <!-- [EDITAR VIDEO] video-main.mp4 -->
+                <video loop muted autoplay playsinline>
+                    <source src="video-main.mp4" type="video/mp4">
+                    Tu navegador no soporta video.
+                </video>
+            </div>
+
+            <!-- Botón Encuéntrame -->
+            <button onclick="window.open('https://xat.com/vip', '_blank')" class="hover-trigger btn-liquid mt-12 mb-4">ENCUÉNTRAME</button>
+
+            <!-- Firma -->
+            <!-- [EDITAR FIRMA] -->
+            <p class="font-mono text-[10px] text-gray-600 tracking-widest uppercase footer-sig">©2026 EAM96 – AUTHENTIC DESIGN</p>
+
+            <!-- PLANETA ANIMADO -->
+            <a href="https://xat.com" target="_blank" class="footer-planet-link hover-trigger">
+                <div class="wireframe-planet">
+                    <div class="planet-sphere-ring"></div><div class="planet-sphere-ring"></div><div class="planet-sphere-ring"></div><div class="planet-sphere-ring"></div>
+                    <div class="planet-outer-ring"></div><div class="planet-outer-ring"></div>
+                </div>
+            </a>
+
+        </footer>
+
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- LIGHTBOX LOGIC ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+
+        // Solo las imágenes con clase .lightbox-trigger abren el lightbox
+        document.querySelectorAll('.lightbox-trigger img').forEach(img => {
+            img.parentElement.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if(e.target === lightbox) lightbox.classList.remove('active');
+        });
+
+        // --- SPLASH SCREEN LOGIC ---
+        const splash = document.getElementById('splash-screen');
+        const startBtn = document.getElementById('start-btn');
+        const grid = document.querySelector('.cyber-grid');
+        document.body.style.overflow = 'hidden';
+
+        startBtn.addEventListener('click', () => {
+            startBtn.classList.add('loading');
+            startBtn.innerHTML = `
+                <div class="loading-wormhole">
+                    <div class="load-ring"></div><div class="load-ring"></div><div class="load-ring"></div>
+                </div>`;
+            grid.classList.add('expanding');
+            
+            setTimeout(() => {
+                gsap.to(splash, {
+                    opacity: 0, duration: 1, ease: "power2.inOut",
+                    onComplete: () => {
+                        splash.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        ScrollTrigger.refresh();
+                        const tl = gsap.timeline();
+                        tl.from(".reveal-text", { y: 200, duration: 1.8, stagger: 0.15, ease: "power4.out", skewY: 10 })
+                          .from(".chrome-render", { scale: 1.1, opacity: 0, duration: 2.5, ease: "power2.out" }, "-=1.5");
+                    }
+                });
+            }, 1500);
+        });
+
+        const nav = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { nav.classList.add('nav-scrolled'); } 
+            else { nav.classList.remove('nav-scrolled'); }
+        });
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener("DOMContentLoaded", () => {
+                const cursorDot = document.querySelector(".cursor-dot");
+                const cursorOutline = document.querySelector(".cursor-outline");
+                
+                gsap.set(cursorDot, {xPercent: -50, yPercent: -50});
+                gsap.set(cursorOutline, {xPercent: -50, yPercent: -50});
+
+                window.addEventListener("mousemove", (e) => {
+                    cursorDot.style.left = e.clientX + 'px';
+                    cursorDot.style.top = e.clientY + 'px';
+                    cursorOutline.animate({ left: e.clientX + "px", top: e.clientY + "px" }, { duration: 100, fill: "forwards" });
+                });
+                
+                document.querySelectorAll('.hover-trigger').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
+                    el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
+                });
+            });
+        }
+
+        // --- MUSIC LOGIC ---
+        let isPlaying = false;
+        const albumArt = document.getElementById('albumArt');
+        const playBtn = document.getElementById('playBtn');
+        const trackTitle = document.querySelector('.track-info');
+        const trackArtist = document.querySelector('.track-artist');
+        const audio = new Audio();
+        
+        // [EDITAR LISTA DE CANCIONES]
+        const trackList = [
+            { title: "Wake Me Up", artist: "The Weeknd", file: "track1.mp3" },
+            { title: "Drive", artist: "The Weeknd", file: "track2.mp3" },
+            { title: "I Feel It Coming", artist: "The Weeknd", file: "track3.mp3" },
+            { title: "Less Than Zero", artist: "The Weeknd", file: "track4.mp3" }
+        ];
+        
+        let currentTrackIndex = 0;
+
+        function updatePlayerUI() {
+            trackTitle.innerText = trackList[currentTrackIndex].title;
+            trackArtist.innerText = trackList[currentTrackIndex].artist;
+            audio.src = trackList[currentTrackIndex].file;
+            if(isPlaying) {
+                audio.play().catch(e => console.log("Audio play error", e));
+            }
+        }
+
+        updatePlayerUI();
+
+        function togglePlay() {
+            if (!audio.src) updatePlayerUI();
+            
+            isPlaying = !isPlaying;
+            if (isPlaying) { 
+                albumArt.classList.add('playing'); 
+                playBtn.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; 
+                audio.play().catch(e => console.log("Audio file not found, playing visual simulation only"));
+            } else { 
+                albumArt.classList.remove('playing'); 
+                playBtn.innerHTML = '<path d="M8 5v14l11-7z"/>'; 
+                audio.pause();
+            }
+        }
+
+        function nextTrack() { 
+            gsap.fromTo(".track-info", {opacity: 0, x: 10}, {opacity: 1, x: 0, duration: 0.5});
+            currentTrackIndex = (currentTrackIndex + 1) % trackList.length;
+            updatePlayerUI();
+        }
+
+        function prevTrack() { 
+            gsap.fromTo(".track-info", {opacity: 0, x: -10}, {opacity: 1, x: 0, duration: 0.5});
+            currentTrackIndex = (currentTrackIndex - 1 + trackList.length) % trackList.length;
+            updatePlayerUI();
+        }
+
+        // --- VIDEO CONTROL FUNCTIONS ---
+        function toggleVideoPlay() {
+            const v = document.querySelector('video');
+            if(v.paused) v.play();
+            else v.pause();
+        }
+        function stopVideo() {
+            const v = document.querySelector('video');
+            v.pause();
+            v.currentTime = 0;
+        }
+        function replayVideo() {
+            const v = document.querySelector('video');
+            v.currentTime = 0;
+            v.play();
+        }
+        function setVideoVolume(val) {
+            document.querySelector('video').volume = val;
+        }
+
+        gsap.to(".chrome-render", {
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 0.5 },
+            y: 200, x: -100, scale: 1.8, rotation: 25, 
+            filter: "contrast(1.5) brightness(1.2) saturate(1.8) hue-rotate(30deg)", 
+            transformOrigin: "center center", 
+            ease: "power1.inOut"
+        });
+
+        gsap.from(".gallery-item", {
+            y: 100, opacity: 0, duration: 1.2, stagger: 0.2, ease: "power3.out",
+            scrollTrigger: { trigger: ".gallery-item", start: "top 90%" }
+        });
+
+        gsap.to(".bonus-image", {
+            scrollTrigger: { trigger: ".bonus-parallax-wrapper", start: "top bottom", end: "bottom top", scrub: 0.5 },
+            y: 50, scale: 1.3, filter: "grayscale(0%) contrast(1.4) brightness(1.3) hue-rotate(-20deg) drop-shadow(0 0 20px rgba(0,255,255,0.2))", ease: "power1.inOut"
+        });
+    </script>
+</body>
+</html>
