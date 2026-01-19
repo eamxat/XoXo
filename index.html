@@ -68,20 +68,37 @@
             overflow-x: hidden;
         }
 
-        /* --- BOTÓN OPTIMIZAR (SOLO MÓVIL) --- */
+        /* --- BOTÓN OPTIMIZAR (SOLO MÓVIL - ESTILO NEON GLASS) --- */
         .optimize-btn {
             position: fixed; top: 100px; right: 20px; z-index: 99999;
-            background: rgba(0, 0, 0, 0.9); border: 1px solid var(--neon-accent);
-            color: var(--neon-accent); padding: 8px 12px; border-radius: 6px;
-            font-family: 'Space Grotesk', sans-serif; font-size: 10px; 
-            text-transform: uppercase; letter-spacing: 1px;
-            backdrop-filter: blur(10px); cursor: pointer; 
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            transition: 0.3s;
+            background: rgba(0, 243, 255, 0.05); /* Fondo sutil */
+            border: 1px solid var(--neon-accent);
+            color: #fff; 
+            padding: 10px 16px; 
+            border-radius: 50px; /* Bordes redondeados como los otros botones */
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 11px; 
+            font-weight: bold;
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px); 
+            cursor: pointer; 
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            transition: all 0.3s ease;
+            display: none; /* Oculto por defecto, se activa en JS tras splash */
         }
-        .optimize-btn:active { transform: scale(0.95); background: var(--neon-accent); color: #000; }
-        /* Ocultar en PC */
-        @media (min-width: 769px) { .optimize-btn { display: none; } }
+        .optimize-btn:hover {
+            background: rgba(0, 243, 255, 0.15);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+            transform: scale(1.05);
+        }
+        .optimize-btn:active { 
+            transform: scale(0.95); 
+            background: var(--neon-accent); 
+            color: #000; 
+        }
+        /* Ocultar en PC (Media Query redundante de seguridad) */
+        @media (min-width: 769px) { .optimize-btn { display: none !important; } }
 
         /* --- LIGHTBOX --- */
         #lightbox {
@@ -567,7 +584,7 @@
 <body class="antialiased">
 
     <!-- BOTÓN OPTIMIZAR (Visible solo en móvil) -->
-    <button id="optimize-btn" class="optimize-btn">⚡ OPTIMIZAR WEB</button>
+    <button id="optimize-btn" class="optimize-btn">VERSION MOVIL</button>
 
     <!-- LIGHTBOX -->
     <div id="lightbox">
@@ -616,8 +633,8 @@
     <nav class="fixed w-full z-50 top-16 px-4 md:px-8 py-6 flex justify-between items-center text-white mix-blend-exclusion" id="navbar">
         <div class="flex flex-col group cursor-none hover-trigger">
             <!-- [EDITAR LOGO] Texto NEXUS -->
-            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">NEXUS©</span>
-            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">CHROME EDITION</span>
+            <span class="font-syne font-bold text-xl tracking-tighter group-hover:opacity-80 transition">EAM©</span>
+            <span class="text-[0.6rem] opacity-50 font-mono tracking-widest">Xatspace Seller</span>
         </div>
         
         <!-- [EDITAR LINKS] Menú de navegación CENTRADO -->
@@ -889,6 +906,11 @@
                         const tl = gsap.timeline();
                         tl.from(".reveal-text", { y: 200, duration: 1.8, stagger: 0.15, ease: "power4.out", skewY: 10 })
                           .from(".chrome-render", { scale: 1.1, opacity: 0, duration: 2.5, ease: "power2.out" }, "-=1.5");
+
+                        // Show mobile optimize button after splash
+                        if(window.matchMedia("(max-width: 768px)").matches) {
+                            document.getElementById('optimize-btn').style.display = 'block';
+                        }
                     }
                 });
             }, 1500);
@@ -1051,4 +1073,5 @@
     </script>
 </body>
 </html>
+
 
