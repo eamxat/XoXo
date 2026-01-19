@@ -38,7 +38,7 @@
         ========================================================================
     -->
     
-    <title>NEXUS | Chrome Edition</title>
+    <title>Eam96 | Chrome XO</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -582,7 +582,7 @@
     <!-- MODELO PARALLAX -->
     <!-- [EDITAR IMAGEN HERO] Archivo: background.jpg -->
     <div class="parallax-wrapper">
-        <img src="background.jpg" onerror="this.src='https://pbs.twimg.com/media/DGUsIzpUQAE8a8n.jpg'" class="chrome-render" alt="Liquid Chrome Background">
+        <img src="background.jpg" class="chrome-render" alt="Liquid Chrome Background">
     </div>
     <div class="parallax-overlay"></div>
 
@@ -785,19 +785,20 @@
                 <div class="video-overlay-controls" onclick="event.stopPropagation()">
                      <div style="display:flex; gap:15px; align-items:center;">
                          <!-- Play -->
-                         <svg class="control-btn w-5 h-5 text-white" onclick="toggleVideoPlay()" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                         <svg class="control-btn w-5 h-5 text-white" onclick="document.querySelector('video').play()" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                          <!-- Stop -->
-                         <svg class="control-btn w-4 h-4" onclick="stopVideo()" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                         <svg class="control-btn w-4 h-4" onclick="let v=document.querySelector('video'); v.pause(); v.currentTime=0;" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
                          <!-- Replay -->
-                         <svg class="control-btn w-4 h-4" onclick="replayVideo()" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                         <svg class="control-btn w-4 h-4" onclick="let v=document.querySelector('video'); v.currentTime=0; v.play();" fill="currentColor" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
                      </div>
                      
                      <div class="volume-container">
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" class="text-gray-400"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="setVideoVolume(this.value)" class="volume-slider hover-trigger" style="width: 60px;">
+                        <input type="range" min="0" max="1" step="0.1" value="1" oninput="document.querySelector('video').volume=this.value" class="volume-slider hover-trigger" style="width: 60px;">
                      </div>
                 </div>
                 <!-- [EDITAR VIDEO] video-main.mp4 -->
+                <!-- Removed 'autoplay' to fix audio issue (browsers block autoplay with sound) -->
                 <video loop playsinline>
                     <source src="video-main.mp4" type="video/mp4">
                     Tu navegador no soporta video.
@@ -831,6 +832,7 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.getElementById('lightbox-close');
 
+        // Solo las imágenes con clase .lightbox-trigger abren el lightbox
         document.querySelectorAll('.lightbox-trigger img').forEach(img => {
             img.parentElement.addEventListener('click', () => {
                 lightboxImg.src = img.src;
@@ -910,6 +912,8 @@
         let isPlaying = false;
         const albumArt = document.getElementById('albumArt');
         const playBtn = document.getElementById('playBtn');
+        const trackTitle = document.querySelector('.track-info');
+        const trackArtist = document.querySelector('.track-artist');
         const audio = new Audio();
         
         // [EDITAR LISTA DE CANCIONES]
@@ -1006,3 +1010,4 @@
     </script>
 </body>
 </html>
+
