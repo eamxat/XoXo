@@ -38,7 +38,7 @@
         ========================================================================
     -->
     
-    <title>NEXUS | Chrome Edition</title>
+    <title>EAM | Chrome Edition</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -554,20 +554,6 @@
             overflow: visible; box-shadow: 0 0 30px rgba(0,0,0,0.5); background: #000; z-index: 10;
         }
         .video-container video { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; position: relative; z-index: 10; }
-        
-        /* Video Overlay Controls (Nuevo) */
-        .video-overlay-controls {
-            position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
-            width: 90%;
-            background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
-            padding: 0.8rem 1.5rem;
-            display: flex; justify-content: space-between; align-items: center;
-            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 20;
-        }
-        .video-container:hover .video-overlay-controls {
-            opacity: 1; pointer-events: auto;
-        }
 
         /* Footer Fix - Corrección Visual */
         footer {
@@ -578,6 +564,41 @@
         /* Footer Signature Style */
         .footer-sig { transition: all 0.3s ease; cursor: default; }
         .footer-sig:hover { color: #fff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); }
+
+        /* --- MOBILE STABILITY FIXES (<1024px) --- */
+        @media (max-width: 1023px) {
+            /* 1. Estabilizar Contenedor del Fondo */
+            .parallax-wrapper {
+                height: 100dvh !important;       /* Altura dinámica para evitar saltos de barra nav */
+                transform: translateZ(0);        /* Fuerza aceleración GPU */
+                -webkit-transform: translateZ(0);
+                will-change: transform;          /* Prepara el navegador para cambios */
+                contain: strict;                 /* Aísla el renderizado para evitar reflows globales */
+            }
+
+            /* 2. Congelar Imagen (Parallax Off) */
+            .chrome-render {
+                transform: none !important;      /* Anula movimiento de GSAP/Parallax */
+                width: 100% !important;          /* Asegura cobertura total */
+                height: 100% !important;
+                object-fit: cover !important;    /* Evita deformación */
+                object-position: center !important;
+                backface-visibility: hidden;     /* Elimina flasheo al scrollear */
+                -webkit-backface-visibility: hidden;
+            }
+
+            /* 3. Contexto de Scroll Fluido */
+            body {
+                overscroll-behavior: none;       /* Evita efecto elástico que muestra fondo blanco */
+                -webkit-overflow-scrolling: touch; /* Mantiene inercia nativa suave */
+            }
+            
+            /* Asegurar que el overlay no se mueva */
+            .parallax-overlay {
+                height: 100dvh !important;
+                transform: translateZ(0);
+            }
+        }
 
     </style>
 </head>
