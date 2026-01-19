@@ -1024,7 +1024,8 @@
             updatePlayerUI();
         }
 
-        // --- VIDEO CONTROL FUNCTIONS (Nuevo) ---
+       
+       // --- VIDEO CONTROL FUNCTIONS ---
         function toggleVideoPlay() {
             const v = document.querySelector('video');
             if(v.paused) v.play();
@@ -1043,6 +1044,7 @@
         function setVideoVolume(val) {
             document.querySelector('video').volume = val;
         }
+
 
         // --- PARALLAX RESPONSIVE ---
         let mm = gsap.matchMedia();
@@ -1094,5 +1096,6 @@
     </script>
 </body>
 </html>
+
 
 
