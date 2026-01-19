@@ -798,6 +798,7 @@
                      </div>
                 </div>
                 <!-- [EDITAR VIDEO] video-main.mp4 -->
+                <!-- Removed 'autoplay' to fix audio issue (browsers block autoplay with sound) -->
                 <video loop playsinline>
                     <source src="video-main.mp4" type="video/mp4">
                     Tu navegador no soporta video.
@@ -963,7 +964,9 @@
             updatePlayerUI();
         }
 
-        // --- VIDEO CONTROL FUNCTIONS (Nuevo) ---
+        // --- VIDEO CONTROL FUNCTIONS ---
+        // Se cambió lógica de video para que no sea autoplay con sonido (bloqueado por navegadores)
+        // Ahora inicia pausado y requiere click para play con audio.
         function toggleVideoPlay() {
             const v = document.querySelector('video');
             if(v.paused) v.play();
