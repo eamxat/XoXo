@@ -982,7 +982,7 @@
             <button onclick="window.open('https://xat.com/ayuda', '_blank')" class="hover-trigger btn-liquid mt-40 mb-4">ENCUÉNTRAME</button>
 
             <!-- FIRMA -->
-            <p class="font-mono text-[10px] text-gray-600 tracking-widest uppercase footer-sig">©2026 EAM96 – AUTHENTIC DESIGN</p>
+            <p class="font-mono text-[10px] text-gray-600 tracking-widest uppercase footer-sig">©2026 EAM96 – Para Mejor experiencia ver Xatspace en PC.</p>
 
         </footer>
 
@@ -990,6 +990,18 @@
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
+
+        // --- OPTIMIZACIÓN AUTOMÁTICA CHROME MÓVIL ---
+        // Detectamos si es un dispositivo móvil y si es Chrome
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        // Detección simple pero efectiva para Chrome en Android/Móvil
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        const isMobileChrome = isMobile && isChrome;
+
+        if (isMobileChrome) {
+            // Configuración crítica para Chrome Móvil: evita recálculos constantes al scrollear
+            ScrollTrigger.config({ ignoreMobileResize: true });
+        }
 
         // --- LIGHTBOX ---
         const lightbox = document.getElementById('lightbox');
@@ -1119,8 +1131,6 @@
                         const tl = gsap.timeline();
                         tl.from(".reveal-text", { y: 200, duration: 1.8, stagger: 0.15, ease: "power4.out", skewY: 10 })
                           .from(".chrome-render", { scale: 1.1, opacity: 0, duration: 2.5, ease: "power2.out" }, "-=1.5");
-                        // BOTÓN OPTIMIZAR ELIMINADO
-                        
                         // Resume audio safely
                         togglePlay();
                     }
@@ -1154,6 +1164,8 @@
 
         // --- PARALLAX ---
         let mm = gsap.matchMedia();
+        
+        // 1. Efecto Render Principal (Solo Desktop)
         mm.add("(min-width: 769px)", () => {
             gsap.to(".chrome-render", {
                 scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 0.5 },
@@ -1162,12 +1174,18 @@
                 transformOrigin: "center center", ease: "power1.inOut"
             });
         });
-        gsap.to(".bonus-image", {
-            scrollTrigger: { trigger: ".bonus-parallax-wrapper", start: "top bottom", end: "bottom top", scrub: 0.5 },
-            y: 50, scale: 1.3, filter: "grayscale(0%) contrast(1.4) brightness(1.3) hue-rotate(-20deg) drop-shadow(0 0 20px rgba(0,255,255,0.2))", ease: "power1.inOut"
-        });
 
-        // --- ELIMINADO: LOGICA BOTON OPTIMIZAR ---
+        // 2. Efecto Imagen Bonus (Desktop y Móviles NO Chrome)
+        // Se ejecuta en: Desktop (>769) Y en móviles (<768)
+        // PERO dentro de la función, bloqueamos si es Chrome Móvil
+        mm.add("(min-width: 769px), (max-width: 768px)", (context) => {
+            if (isMobileChrome) return; // DETENER animación si es Chrome Móvil
+
+            gsap.to(".bonus-image", {
+                scrollTrigger: { trigger: ".bonus-parallax-wrapper", start: "top bottom", end: "bottom top", scrub: 0.5 },
+                y: 50, scale: 1.3, filter: "grayscale(0%) contrast(1.4) brightness(1.3) hue-rotate(-20deg) drop-shadow(0 0 20px rgba(0,255,255,0.2))", ease: "power1.inOut"
+            });
+        });
 
         // --- SEGURIDAD: BLOQUEO F12 Y CLICK DERECHO ---
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -1180,6 +1198,7 @@
     </script>
 </body>
 </html>
+
 
 
 
