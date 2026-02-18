@@ -29,7 +29,7 @@
            - Video:          video-main.mp4
            - Canciones:      track1.mp3, track2.mp3, track3.mp3, track4.mp3
 
-           codigo creado por ©2026 Eam96           
+           codigo creado por ©2026 Eam96            
         ========================================================================
     -->
     
@@ -58,11 +58,11 @@
             --neon-accent: #00f3ff;
             
             /* Variables Mini Perfil */
-            --mp-img-size: 42px;       
+            --mp-img-size: 42px;        
             --mp-pawn-w: 30px;
             --mp-pawn-h: 30px; 
-            --mp-name-size: 1rem;    
-            --mp-sub-size: 0.7rem;    
+            --mp-name-size: 1rem;     
+            --mp-sub-size: 0.7rem;     
             --mp-font-name: 'Plus Jakarta Sans', sans-serif; 
             --mp-border-color: #e5e7eb;
         }
@@ -558,23 +558,23 @@
         /* --- MOBILE STABILITY FIXES (<1024px) --- */
         @media (max-width: 1023px) {
             .parallax-wrapper {
-                height: 100dvh !important;       
-                transform: translateZ(0);        
+                height: 100dvh !important;        
+                transform: translateZ(0);          
                 -webkit-transform: translateZ(0);
-                will-change: transform;          
-                contain: strict;                 
+                will-change: transform;           
+                contain: strict;                  
             }
             .chrome-render {
-                transform: none !important;      
-                width: 100% !important;          
+                transform: none !important;       
+                width: 100% !important;           
                 height: 100% !important;
-                object-fit: cover !important;    
+                object-fit: cover !important;     
                 object-position: center !important;
-                backface-visibility: hidden;     
+                backface-visibility: hidden;      
                 -webkit-backface-visibility: hidden;
             }
             body {
-                overscroll-behavior: none;       
+                overscroll-behavior: none;        
                 -webkit-overflow-scrolling: touch; 
             }
             .parallax-overlay {
@@ -799,7 +799,7 @@
                     <div class="overflow-hidden"><span class="block reveal-text chrome-text">X0</span></div>
                     <div class="overflow-hidden py-2"><span class="block reveal-text chrome-text hover-trigger">X0</span></div>
                     <div class="overflow-hidden mt-0 pl-2 md:pl-4">
-                        <span class="dynamics-text hover-trigger text-[0.4em] font-bold">ID:98782298</span>
+                        <div class="dynamics-text hover-trigger text-[0.4em] font-bold">ID:98782298</div>
                     </div>
                 </h1>
             </div>
@@ -1105,6 +1105,15 @@
             if(cr) { cr.style.transform = 'translate(-50%, -50%)'; cr.style.position = 'absolute'; cr.style.top = '50%'; cr.style.left = '50%'; }
             this.style.display = 'none';
         });
+
+        // --- SEGURIDAD: BLOQUEO F12 Y CLICK DERECHO ---
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123) { return false; } // F12
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Shift+I
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Shift+J
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U
+        }
     </script>
 </body>
 </html>
